@@ -10,109 +10,143 @@ import java.util.ArrayList;
  */
 public class Deck {
 
-	/**
-	 * cards contains all the cards in the deck.
-	 */
-	private List<Card> cards;
+    /**
+     * cards contains all the cards in the deck.
+     */
+    private List<Card> cards;
 
-	/**
-	 * size is the number of not-yet-dealt cards.
-	 * Cards are dealt from the top (highest index) down.
-	 * The next card to be dealt is at size - 1.
-	 */
-	private int size;
+    /**
+     * size is the number of not-yet-dealt cards.
+     * Cards are dealt from the top (highest index) down.
+     * The next card to be dealt is at size - 1.
+     */
+    private int size;
 
+    /**
+     * Creates a new <code>Deck</code> instance.<BR>
+     * It pairs each element of ranks with each element of suits,
+     * and produces one of the corresponding card.
+     * @param ranks is an array containing all of the card ranks.
+     * @param suits is an array containing all of the card suits.
+     * @param values is an array containing all of the card point values.
+     */
+    public Deck(String[] ranks, String[] suits, int[] values) {
+        cards = new ArrayList<Card>();
+        for (int j = 0; j < ranks.length; j++) {
+            for (String suitString : suits) {
+                cards.add(new Card(ranks[j], suitString, values[j]));
+            }
+        }
+        size = cards.size();
+        shuffle();
+    }
 
-	/**
-	 * Creates a new <code>Deck</code> instance.<BR>
-	 * It pairs each element of ranks with each element of suits,
-	 * and produces one of the corresponding card.
-	 * @param ranks is an array containing all of the card ranks.
-	 * @param suits is an array containing all of the card suits.
-	 * @param values is an array containing all of the card point values.
-	 */
-	public Deck(String[] ranks, String[] suits, int[] values) {
-		cards = new ArrayList<Card>();
-		for (int j = 0; j < ranks.length; j++) {
-			for (String suitString : suits) {
-				cards.add(new Card(ranks[j], suitString, values[j]));
-			}
-		}
-		size = cards.size();
-		shuffle();
-	}
+    /**
+     * Determines if this deck is empty (no undealt cards).
+     * @return true if this deck is empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        return size == 0;
+    }
 
+    /**
+     * Accesses the number of undealt cards in this deck.
+     * @return the number of undealt cards in this deck.
+     */
+    public int size() {
+        return size;
+    }
 
-	/**
-	 * Determines if this deck is empty (no undealt cards).
-	 * @return true if this deck is empty, false otherwise.
-	 */
-	public boolean isEmpty() {
-		return size == 0;
-	}
+    /**
+     * Randomly permute the given collection of cards
+     * and reset the size to represent the entire deck.
+     */
+    public void shuffle() {
 
-	/**
-	 * Accesses the number of undealt cards in this deck.
-	 * @return the number of undealt cards in this deck.
-	 */
-	public int size() {
-		return size;
-	}
+        int SHUFFLE_COUNT = 1;
+        int VALUE_COUNT = 52;
 
-	/**
-	 * Randomly permute the given collection of cards
-	 * and reset the size to represent the entire deck.
-	 */
-	public void shuffle() {
-		/* *** TO BE IMPLEMENTED IN ACTIVITY 4 *** */
-	}
+        System.out.println("Results of " + SHUFFLE_COUNT +
+            " consecutive perfect shuffles:");
+        int[] values1 = new int[VALUE_COUNT];
+        for (int i = 0; i < values1.length; i++) {
+            values1[i] = i;
+        }
+        for (int j = 1; j <= SHUFFLE_COUNT; j++) {
+            perfectShuffle(values1);
+            System.out.print("  " + j + ":");
+            for (int k = 0; k < values1.length; k++) {
+                System.out.print(" " + values1[k]);
+            }
+            System.out.println();
 
-	/**
-	 * Deals a card from this deck.
-	 * @return the card just dealt, or null if all the cards have been
-	 *         previously dealt.
-	 */
-	public Card deal() {
-		if (isEmpty()) {
-			return null;
-		}
-		size--;
-		Card c = cards.get(size);
-		return c;
-	}
+            {
+                int upTo = (values.length+1)/2;
+                int[] values1=new int[values.length];
+                int p=0;
+                for (int e:values){
+                    values1[p]=e;
+                    p++;   
+                }   
+                int k=0;
+                for (int j=0;j<upTo;j++) {
+                    values[k]= values1[j];
+                    k+=2;
+                } 
+                k=1;
+                for (int j=upTo+1;j<values.length;j++) {
+                    values[k]= values1[j];
+                    k+=2;
+                } 
+            }
+        }
 
-	/**
-	 * Generates and returns a string representation of this deck.
-	 * @return a string representation of this deck.
-	 */
-	@Override
-	public String toString() {
-		String rtn = "size = " + size + "\nUndealt cards: \n";
+        /**
+         * Deals a card from this deck.
+         * @return the card just dealt, or null if all the cards have been
+         *         previously dealt.
+         */
+        {
+            if (isEmpty()) {
+                return null;
+            }
+            size--;
+            Card c = cards.get(size);
+            return c;
+        }
 
-		for (int k = size - 1; k >= 0; k--) {
-			rtn = rtn + cards.get(k);
-			if (k != 0) {
-				rtn = rtn + ", ";
-			}
-			if ((size - k) % 2 == 0) {
-				// Insert carriage returns so entire deck is visible on console.
-				rtn = rtn + "\n";
-			}
-		}
+        /**
+         * Generates and returns a string representation of this deck.
+         * @return a string representation of this deck.
+         */
+        @Override
+        public String toString() {
+            String rtn = "size = " + size + "\nUndealt cards: \n";
 
-		rtn = rtn + "\nDealt cards: \n";
-		for (int k = cards.size() - 1; k >= size; k--) {
-			rtn = rtn + cards.get(k);
-			if (k != size) {
-				rtn = rtn + ", ";
-			}
-			if ((k - cards.size()) % 2 == 0) {
-				// Insert carriage returns so entire deck is visible on console.
-				rtn = rtn + "\n";
-			}
-		}
+            for (int k = size - 1; k >= 0; k--) {
+                rtn = rtn + cards.get(k);
+                if (k != 0) {
+                    rtn = rtn + ", ";
+                }
+                if ((size - k) % 2 == 0) {
+                    // Insert carriage returns so entire deck is visible on console.
+                    rtn = rtn + "\n";
+                }
+            }
 
-		rtn = rtn + "\n";
-		return rtn;
-	}
-}
+            rtn = rtn + "\nDealt cards: \n";
+            for (int k = cards.size() - 1; k >= size; k--) {
+                rtn = rtn + cards.get(k);
+                if (k != size) {
+                    rtn = rtn + ", ";
+                }
+                if ((k - cards.size()) % 2 == 0) {
+                    // Insert carriage returns so entire deck is visible on console.
+                    rtn = rtn + "\n";
+                }
+            }
+
+            rtn = rtn + "\n";
+            return rtn;
+        }
+    }
